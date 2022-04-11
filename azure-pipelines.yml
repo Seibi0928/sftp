@@ -1,0 +1,19 @@
+trigger:
+- main
+- develop
+
+pool:
+  vmImage: 'ubuntu-20.04'
+
+steps:
+- task: Docker@2
+  displayName: 'Build and Push SFTP Server Image'
+  inputs:
+    containerRegistry: 'dockerRegistryServiceConnection'
+    repository: 'harunari/sftp-server'
+    command: 'buildAndPush'
+    Dockerfile: './Dockerfile'
+    buildContext: '.'
+    tags: |
+      ${{ parameters.imageTag }}-$(Build.BuildId)
+      ${{ parameters.imageTag }}
