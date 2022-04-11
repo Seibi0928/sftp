@@ -1,4 +1,4 @@
 FROM atmoz/sftp:latest
 
-COPY ./fixDirectoryOwner.sh /etc/sftp.d/fixDirectoryOwner.sh
-RUN chmod +x /etc/sftp.d/fixDirectoryOwner.sh
+COPY ./fixDirectoryOwnership.sh /etc/sftp.d/fixDirectoryOwnership.sh
+RUN chmod +x /etc/sftp.d/fixDirectoryOwnership.sh

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-userConfFinalPath="/var/run/sftp-users.conf"
+userConfFinalPath="/var/run/sftp/users.conf"
 
 function fix_ownership_for_user() {
   IFS=':' read -a param <<< $@
