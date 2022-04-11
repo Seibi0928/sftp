@@ -5,15 +5,27 @@ trigger:
 pool:
   vmImage: 'ubuntu-20.04'
 
-steps:
-- task: Docker@2
-  displayName: 'Build and Push SFTP Server Image'
-  inputs:
-    containerRegistry: 'dockerRegistryServiceConnection'
-    repository: 'harunari/sftp-server'
-    command: 'buildAndPush'
-    Dockerfile: './Dockerfile'
-    buildContext: '.'
-    tags: |
-      ${{ parameters.imageTag }}-$(Build.BuildId)
-      ${{ parameters.imageTag }}
+jobs:
+  - job: buildImage
+    variables:
+      ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+        imageTag: stable
+      ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+        imageTag: alpha
+    steps:
+    - task: Docker@2
+      displayName: 'Login Dockerhub'
+      inputs:
+        containerRegistry: 'dockerRegistryServiceConnection'
+        command: 'login'
+    - task: Docker@2
+      displayName: 'Build and Push SFTP Server Image'
+      inputs:
+        containerRegistry: 'dockerRegistryServiceConnection'
+        repository: 'harunari/sftp-server'
+        command: 'buildAndPush'
+        Dockerfile: './Dockerfile'
+        buildContext: '.'
+        tags: |
+          $(imageTag)-$(Build.BuildId)
+          $(imageTag)
